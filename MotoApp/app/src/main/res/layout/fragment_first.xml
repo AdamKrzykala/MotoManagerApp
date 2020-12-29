@@ -8,21 +8,40 @@
 
     <TextView
         android:id="@+id/textview_first"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/hello_first_fragment"
-        app:layout_constraintBottom_toTopOf="@id/button_first"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal"
+        android:text="@string/my_garage"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/_dynamic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ListView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_first"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_first">
+
+    </ListView>
+
     <Button
         android:id="@+id/button_first"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/next"
+        android:layout_margin="10sp"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="5sp"
+        android:text="@string/my_service"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@+id/_dynamic" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
