@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondFragment">
+    tools:context=".ui.service.ServiceFragment">
 
     <TextView
         android:id="@+id/textview_second"
@@ -15,31 +15,20 @@
         android:padding="5sp"
         android:text="@string/my_service"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/_dynamic"
+        app:layout_constraintBottom_toTopOf="@+id/serviceList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
+        android:id="@+id/serviceList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10sp"
         android:padding="5sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_second"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_second" />
-
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:padding="5sp"
-        android:text="@string/my_garage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_dynamic" />
+        app:layout_constraintTop_toBottomOf="@+id/textview_second" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
