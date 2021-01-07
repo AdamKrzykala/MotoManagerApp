@@ -2,7 +2,9 @@ package com.example.motoapp;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.Toast;
 
+import com.example.motoapp.adapters.DatabaseAdapter;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        DatabaseAdapter adapter = new DatabaseAdapter(this);
+        adapter.addVehicle("KTM");
+        adapter.closeDatabase();
     }
 
     @Override
