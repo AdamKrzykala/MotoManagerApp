@@ -40,10 +40,11 @@ public class GarageFragment extends Fragment {
         {
             if((requestCode== 101 ) && (resultCode== Activity.RESULT_OK))
             {
-                Bundle myResultBundle= data.getExtras();
-                Double myResult= myResultBundle.getDouble("vresult");
-                Toast.makeText(getActivity(), (String)myResult.toString(),
+                Bundle resultBundle= data.getExtras();
+                String newModel = resultBundle.getString("vresult");
+                Toast.makeText(getActivity(), newModel,
                         Toast.LENGTH_LONG).show();
+                //Add to local database
             }
         }
         catch(Exception e)
