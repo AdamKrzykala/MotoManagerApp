@@ -10,13 +10,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.motoapp.NewMotoActivity;
+import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import static android.content.ClipData.newIntent;
 
 public class GarageFragment extends Fragment {
 
@@ -61,13 +58,9 @@ public class GarageFragment extends Fragment {
         fabHandler.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Double v1 = Double.parseDouble("111");
-                Double v2 = Double.parseDouble("222");
+                Bundle sendBundle = new Bundle();
 
-                Bundle myDataBundle = new Bundle();
-                myDataBundle.putDouble("val1", v1);
-                myDataBundle.putDouble("val2", v2);
-                chooseIntent.putExtras(myDataBundle);
+                chooseIntent.putExtras(sendBundle);
                 startActivityForResult(chooseIntent, 101);
             }
         });
