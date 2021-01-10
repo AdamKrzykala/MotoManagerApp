@@ -25,6 +25,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
         this.recyclerViewClickListner = recyclerViewClickListner;
     }
 
+    public void updateAdapter(List<String> newList)
+    {
+        this.data = newList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public LocalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

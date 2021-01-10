@@ -2,6 +2,7 @@ package com.example.motoapp.ui.garage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         return inflater.inflate(R.layout.fragment_garage, container, false);
     }//onCreateView
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -58,12 +60,12 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
             {
                 Bundle resultBundle= data.getExtras();
                 String newModel = resultBundle.getString("vresult");
-                Toast.makeText(getActivity(), newModel,
+                Toast.makeText(getActivity(), newModel + " added",
                         Toast.LENGTH_LONG).show();
                 //Add to local database
                 adapter.addVehicle(newModel);
-                localViehicles.add(newModel);
-                localAdapter.notifyDataSetChanged();
+                localViehicles = adapter.getNamesFromGarage();
+                localAdapter.updateAdapter(localViehicles);
             }
         }
         catch(Exception e)
@@ -77,7 +79,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         super.onViewCreated(view, savedInstanceState);
         chooseIntent = new Intent(getActivity(), NewMotoActivity.class);
 
-        localViehicles = new ArrayList<String>();
+        localViehicles = adapter.getNamesFromGarage();
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.garageList);
