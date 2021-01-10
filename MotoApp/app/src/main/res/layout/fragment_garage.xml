@@ -14,23 +14,10 @@
         android:gravity="center_horizontal"
         android:text="@string/my_garage"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@id/garageList"
+        app:layout_constraintBottom_toTopOf="@+id/garageList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ListView
-        android:id="@+id/garageList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="10sp"
-        android:padding="5sp"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first">
-
-    </ListView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -44,6 +31,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/garageList" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/garageList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

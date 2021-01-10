@@ -85,7 +85,7 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
         adapterModel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerModel.setAdapter(adapterModel);
 
-        //Producent spinner
+        //Year spinner
         spinnerYear = (Spinner)findViewById(R.id.spinnerYear);
         ArrayAdapter<String> adapterYear = new ArrayAdapter<String>(this, R.layout.spinner_item, years);
         adapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

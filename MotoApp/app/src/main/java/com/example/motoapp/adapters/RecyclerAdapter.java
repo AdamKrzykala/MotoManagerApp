@@ -24,6 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
         this.data = tempData;
         this.recyclerViewClickListner = recyclerViewClickListner;
     }
+
     @NonNull
     @Override
     public LocalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,10 +46,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
     public class LocalViewHolder extends RecyclerView.ViewHolder{
 
         TextView stringNameVar;
+        TextView stringSubnameVar;
 
         public LocalViewHolder(@NonNull View itemView) {
             super(itemView);
-            stringNameVar = itemView.findViewById(R.id.stringName);
+            stringNameVar = itemView.findViewById(R.id.textViewName);
+            stringSubnameVar = itemView.findViewById(R.id.textViewSubname);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
