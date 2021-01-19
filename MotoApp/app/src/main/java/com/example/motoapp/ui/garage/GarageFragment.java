@@ -2,7 +2,6 @@ package com.example.motoapp.ui.garage;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,6 @@ import com.example.motoapp.adapters.RecyclerAdapter;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GarageFragment extends Fragment implements RecyclerViewClickListner {
 
     private Intent newMotoIntent;
@@ -33,7 +29,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     private FloatingActionButton fabHandler;
 
     private RecyclerAdapter localAdapter;
-    private List<String> localViehicles;
+    private DatabaseAdapter.GarageAnswer localViehicles;
     private RecyclerView recyclerView;
 
     DatabaseAdapter adapter;
@@ -65,13 +61,17 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
                         Toast.LENGTH_LONG).show();
                 //Add to local database
                 adapter.addVehicle(newModel);
-                localViehicles = adapter.getNamesFromGarage();
-                localAdapter.updateAdapter(localViehicles);
+                localViehicles = adapter.getVehicles();
+
+                localAdapter.updateAdapter(localViehicles.names);
             }
 
             if((requestCode == 102) && (resultCode == Activity.RESULT_OK))
             {
                 //Exit from single moto activity
+                localViehicles = adapter.getVehicles();
+
+                localAdapter.updateAdapter(localViehicles.names);
             }
         }
         catch(Exception e)
@@ -86,11 +86,11 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         newMotoIntent = new Intent(getActivity(), NewMotoActivity.class);
         singleMotoIntent = new Intent(getActivity(), SingleMotoActivity.class);
 
-        localViehicles = adapter.getNamesFromGarage();
+        localViehicles = adapter.getVehicles();
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.garageList);
-        localAdapter = new RecyclerAdapter(localIntent, localViehicles, this);
+        localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
 
@@ -111,6 +111,8 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     @Override
     public void onItemClick(int position) {
         Bundle sendBundle = new Bundle();
+        sendBundle.putInt("index", localViehicles.indexes.get(position));
+        sendBundle.putString("name", localViehicles.names.get(position));
         singleMotoIntent.putExtras(sendBundle);
         startActivityForResult(singleMotoIntent, 102);
     }

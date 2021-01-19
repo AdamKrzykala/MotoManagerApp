@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
+    android:id="@+id/moto_navigation"
     app:startDestination="@id/MenuFragment">
 
     <fragment
         android:id="@+id/MenuFragment"
         android:name="com.example.motoapp.ui.garage.fragments.MenuFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/menu_fragment_label"
         tools:layout="@layout/fragment_menu">
 
         <action
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/TrackerFragment"
         android:name="com.example.motoapp.ui.garage.fragments.TrackerFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/tracker_fragment_label"
         tools:layout="@layout/fragment_tracker">
 
         <action
