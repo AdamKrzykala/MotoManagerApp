@@ -27,7 +27,8 @@ import java.util.List;
 
 public class GarageFragment extends Fragment implements RecyclerViewClickListner {
 
-    private Intent chooseIntent;
+    private Intent newMotoIntent;
+    private Intent singleMotoIntent;
     private FragmentActivity localIntent;
     private FloatingActionButton fabHandler;
 
@@ -67,6 +68,11 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
                 localViehicles = adapter.getNamesFromGarage();
                 localAdapter.updateAdapter(localViehicles);
             }
+
+            if((requestCode == 102) && (resultCode == Activity.RESULT_OK))
+            {
+                //Exit from single moto activity
+            }
         }
         catch(Exception e)
         {
@@ -77,7 +83,8 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        chooseIntent = new Intent(getActivity(), NewMotoActivity.class);
+        newMotoIntent = new Intent(getActivity(), NewMotoActivity.class);
+        singleMotoIntent = new Intent(getActivity(), SingleMotoActivity.class);
 
         localViehicles = adapter.getNamesFromGarage();
 
@@ -95,15 +102,16 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
             public void onClick(View v) {
                 Bundle sendBundle = new Bundle();
 
-                chooseIntent.putExtras(sendBundle);
-                startActivityForResult(chooseIntent, 101);
+                newMotoIntent.putExtras(sendBundle);
+                startActivityForResult(newMotoIntent, 101);
             }
         });
     }//onViewCreated
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getActivity(), "clicked",
-                Toast.LENGTH_LONG).show();
+        Bundle sendBundle = new Bundle();
+        singleMotoIntent.putExtras(sendBundle);
+        startActivityForResult(singleMotoIntent, 102);
     }
 }

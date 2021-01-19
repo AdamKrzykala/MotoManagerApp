@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.garage.GarageFragment">
 
-    <TextView
-        android:id="@+id/textview_first"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:gravity="center_horizontal"
-        android:text="@string/my_garage"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/garageList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -41,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

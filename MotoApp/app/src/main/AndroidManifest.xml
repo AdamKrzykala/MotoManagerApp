@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MotoApp">
-        <activity android:name=".activities.NewMotoActivity"></activity>
+        <activity
+            android:name=".ui.garage.SingleMotoActivity"
+            android:label="@string/title_activity_single_moto"
+            android:theme="@style/Theme.MotoApp.NoActionBar"></activity>
+        <activity android:name=".activities.NewMotoActivity" />
         <activity android:name=".IntroScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
