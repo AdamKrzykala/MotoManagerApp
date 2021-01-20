@@ -6,22 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.service.ServiceFragment">
 
-    <TextView
-        android:id="@+id/textview_second"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:gravity="center_horizontal"
-        android:padding="5sp"
-        android:text="@string/my_service"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/serviceList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:id="@+id/serviceList"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/garageList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10sp"
@@ -29,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_second" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

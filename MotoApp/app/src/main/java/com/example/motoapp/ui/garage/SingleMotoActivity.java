@@ -58,4 +58,18 @@ public class SingleMotoActivity extends AppCompatActivity implements  OnFragment
         if (key == "name") return motoName;
         return null;
     }
+
+    @Override
+    public void moveVehicleToService() {
+        adapter.moveToService(motoIndex);
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void moveVehicleToGarage() {
+        adapter.moveToGarage(motoIndex);
+        setResult(RESULT_OK);
+        finish();
+    }
 }

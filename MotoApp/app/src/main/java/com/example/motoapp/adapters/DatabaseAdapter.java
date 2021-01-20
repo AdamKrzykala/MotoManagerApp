@@ -34,11 +34,12 @@ public class DatabaseAdapter {
         }
         localdb.execSQL("create table if not exists garage ("
                 + " vehID integer PRIMARY KEY autoincrement, "
-                + " name text);" );
-        localdb.execSQL("DROP table garage");
+                + " name text, "
+                + " inService integer);" );
+        //localdb.execSQL("DROP table garage");
     }
 
-    public class GarageAnswer {
+    public static class GarageAnswer {
         public List<String> names;
         public List<Integer> indexes;
 
@@ -52,9 +53,13 @@ public class DatabaseAdapter {
         }
     }
 
-    public GarageAnswer getVehicles()
+    public GarageAnswer getVehicles(boolean inService)
     {
-        Cursor cursor = localdb.rawQuery("select * from garage", null);
+        String inServiceString;
+        if(inService) inServiceString = "1";
+        else inServiceString = "0";
+
+        Cursor cursor = localdb.rawQuery("select * from garage where inService = ?;", new String[] {inServiceString});
         cursor.moveToFirst();
         List<String> returnListNames = new ArrayList<String>();
         List<Integer> returnListIndexes = new ArrayList<Integer>();
@@ -71,9 +76,19 @@ public class DatabaseAdapter {
         return new GarageAnswer(returnListNames, returnListIndexes);
     }
 
+    public void moveToService(int idx)
+    {
+        localdb.execSQL("update garage set inService = 1 where vehID = ?;", new Object[] {Integer.toString(idx)});
+    }
+
+    public void moveToGarage(int idx)
+    {
+        localdb.execSQL("update garage set inService = 1 where vehID = ?;", new Object[] {Integer.toString(idx)});
+    }
+
     public void addVehicle(String name)
     {
-        localdb.execSQL( "insert into garage(name) values (?);", new Object[] {name} );
+        localdb.execSQL( "insert into garage(name, inService) values (?, ?);", new Object[] {name, 0} );
     }
 
     public void deleteVehicle(int idx)

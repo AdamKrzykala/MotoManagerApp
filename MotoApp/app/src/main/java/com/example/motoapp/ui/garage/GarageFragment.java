@@ -61,18 +61,17 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
                         Toast.LENGTH_LONG).show();
                 //Add to local database
                 adapter.addVehicle(newModel);
-                localViehicles = adapter.getVehicles();
 
-                localAdapter.updateAdapter(localViehicles.names);
             }
 
             if((requestCode == 102) && (resultCode == Activity.RESULT_OK))
             {
                 //Exit from single moto activity
-                localViehicles = adapter.getVehicles();
 
-                localAdapter.updateAdapter(localViehicles.names);
             }
+
+            localViehicles = adapter.getVehicles(false);
+            localAdapter.updateAdapter(localViehicles.names);
         }
         catch(Exception e)
         {
@@ -86,7 +85,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         newMotoIntent = new Intent(getActivity(), NewMotoActivity.class);
         singleMotoIntent = new Intent(getActivity(), SingleMotoActivity.class);
 
-        localViehicles = adapter.getVehicles();
+        localViehicles = adapter.getVehicles(false);
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.garageList);
