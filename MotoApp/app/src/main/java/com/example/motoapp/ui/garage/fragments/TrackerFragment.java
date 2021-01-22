@@ -1,6 +1,8 @@
 package com.example.motoapp.ui.garage.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -39,6 +42,7 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
     protected FloatingActionButton savepauseFABhandler;
 
     private FragmentActivity localIntent;
+    Intent backgroundIntent;
 
     @Override
     public View onCreateView(
@@ -67,6 +71,7 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
         backFABhandler = (FloatingActionButton)view.findViewById(R.id.backToMenuButton);
         startpauseFABhandler = (FloatingActionButton)view.findViewById(R.id.startpauseButton);
         savepauseFABhandler = (FloatingActionButton)view.findViewById(R.id.stopsaveButton);
+        savepauseFABhandler.setVisibility(View.INVISIBLE);
 
         backFABhandler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,16 +84,27 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
         });
 
         startpauseFABhandler.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("UseCompatLoadingForDrawables")
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
                 if(isStopped) {
                     //Should start new map
                     TrackerInBackground.shouldContinue = true;
                     TrackerInBackground.shouldFinish = false;
-                    Intent backgroundIntent = new Intent(getContext(), TrackerInBackground.class);
+                    //Add row to maps table
+                    //Add table and pass table name to tracker
+                    backgroundIntent = new Intent(getContext(), TrackerInBackground.class);
                     localIntent.startService(backgroundIntent);
                     isStopped = false;
                     isStarted = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.pause_button, getContext().getTheme()));
+                    }
+                    else {
+                        startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.pause_button));
+                    }
+                    savepauseFABhandler.setVisibility(View.VISIBLE);
                 }
                 else {
                     if (isStarted) {
@@ -96,7 +112,15 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
                         isStarted = false;
                         isPaused = true;
                         TrackerInBackground.shouldContinue = false;
-                        Log.i("SingleMotoActivity: ", "STOPPED: ");
+                        //Pause process
+                        //Change icon
+                        Log.i("Location: ", "STOPPED: ");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.start_button, getContext().getTheme()));
+                        }
+                        else {
+                            startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.start_button));
+                        }
                     }
                     else {
                         if(isPaused) {
@@ -104,7 +128,15 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
                             isStarted = true;
                             isPaused = false;
                             TrackerInBackground.shouldContinue = true;
-                            Log.i("SingleMotoActivity: ", "RESTARTED: ");
+                            //Start process
+                            //Change icon
+                            Log.i("Location: ", "RESTARTED: ");
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.pause_button, getContext().getTheme()));
+                            }
+                            else {
+                                startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.pause_button));
+                            }
                         }
                     }
                 }
@@ -120,7 +152,16 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
                     isPaused = false;
                     TrackerInBackground.shouldContinue = false;
                     TrackerInBackground.shouldFinish = true;
-                    Log.i("SingleMotoActivity: ", "FINISHED");
+                    //Actualize preview on page with maps
+                    localIntent.stopService(backgroundIntent);
+                    Log.i("Location: ", "FINISHED");
+                    savepauseFABhandler.setVisibility(View.INVISIBLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.start_button, getContext().getTheme()));
+                    }
+                    else {
+                        startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.start_button));
+                    }
                 }
             }
         });

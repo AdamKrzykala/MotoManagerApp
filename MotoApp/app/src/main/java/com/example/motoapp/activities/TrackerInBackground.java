@@ -38,7 +38,6 @@ public class TrackerInBackground extends Service {
     public void onCreate() {
         super.onCreate();
         fusedLocationProviderClient = getFusedLocationProviderClient(this);
-        Log.i("SingleMotoActivity: ", "CONSTRUCTOR STARTED:");
     }
 
     @Nullable
@@ -50,7 +49,7 @@ public class TrackerInBackground extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         requestLocation();
-        Log.i("SingleMotoActivity: ", "STARTED:");
+        Log.i("Location: ", "STARTED:");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -60,13 +59,6 @@ public class TrackerInBackground extends Service {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             Log.e("Location: ", "PERMISSIONS NOT GRANTED");
             return;
         }
@@ -84,31 +76,16 @@ public class TrackerInBackground extends Service {
         getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        Log.i("Location: ", "Lat is: " + locationResult.getLastLocation().getLatitude()
-                                + ",  Log is: " + locationResult.getLastLocation().getLongitude());
+                        //Paused or started
+                        if(shouldContinue && !shouldFinish) {
+                            Log.i("Location: ", "Lat is: " + locationResult.getLastLocation().getLatitude()
+                                    + ",  Log is: " + locationResult.getLastLocation().getLongitude());
+                        }
+//                        if(shouldFinish) {
+//                            stopSelf();
+//                        }
                     }
                 },
                 Looper.myLooper());
     }
-
-
-
-//    @Override
-//    protected void onHandleIntent(@Nullable Intent intent) {
-////        while (!shouldFinish) {
-////            while(shouldContinue) {
-////                try {
-////                    taskInBackGround();
-////                    sleep(1000);
-////                } catch (InterruptedException e) {
-////                    e.printStackTrace();
-////                }
-////            }
-////            //Return list
-////        }
-////        stopSelf();
-//        requestLocation();
-//    }
-    
 }
