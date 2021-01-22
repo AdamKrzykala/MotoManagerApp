@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +18,6 @@ import com.example.motoapp.R;
 import com.example.motoapp.adapters.DatabaseAdapter;
 import com.example.motoapp.adapters.RecyclerAdapter;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ServiceFragment extends Fragment implements RecyclerViewClickListner {
 
@@ -70,7 +68,7 @@ public class ServiceFragment extends Fragment implements RecyclerViewClickListne
         localViehicles = adapter.getVehicles(true);
 
         //Recycler View Settings
-        recyclerView = (RecyclerView) view.findViewById(R.id.garageList);
+        recyclerView = (RecyclerView) view.findViewById(R.id.mapList);
         localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));

@@ -35,7 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
     @Override
     public LocalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_template, parent, false);
+        View view = inflater.inflate(R.layout.row_moto_template, parent, false);
         return new LocalViewHolder(view);
     }
 

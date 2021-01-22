@@ -32,7 +32,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     private DatabaseAdapter.GarageAnswer localViehicles;
     private RecyclerView recyclerView;
 
-    DatabaseAdapter adapter;
+    private DatabaseAdapter adapter;
 
     @Override
     public View onCreateView(
@@ -88,7 +88,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         localViehicles = adapter.getVehicles(false);
 
         //Recycler View Settings
-        recyclerView = (RecyclerView) view.findViewById(R.id.garageList);
+        recyclerView = (RecyclerView) view.findViewById(R.id.mapList);
         localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));

@@ -19,6 +19,7 @@ import com.example.motoapp.ui.garage.SingleMotoActivity;
 
 public class MenuFragment extends Fragment {
 
+    private ImageButton trackerButtonHandler;
     private ImageButton cameraButtonHandler;
     private ImageButton serviceButtonHandler;
     private ImageButton trashbuttonHandler;
@@ -50,10 +51,19 @@ public class MenuFragment extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(listener.getString("name"));
 
+        trackerButtonHandler = (ImageButton)view.findViewById(R.id.trackerButton);
         cameraButtonHandler = (ImageButton)view.findViewById(R.id.photoButton);
         serviceButtonHandler = (ImageButton)view.findViewById(R.id.serviceButton);
         trashbuttonHandler = (ImageButton)view.findViewById(R.id.trashButton);
         backButtonHandler = (ImageButton)view.findViewById(R.id.backButton);
+
+        trackerButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                NavHostFragment.findNavController(MenuFragment.this)
+                        .navigate(R.id.action_MenuFragment_to_TrackerFragment);
+            }
+        });
 
         cameraButtonHandler.setOnClickListener(new View.OnClickListener() {
             @Override

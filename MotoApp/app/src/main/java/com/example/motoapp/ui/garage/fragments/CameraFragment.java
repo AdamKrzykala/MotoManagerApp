@@ -86,9 +86,9 @@ public class CameraFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Uri outPutFileUri = Uri.fromFile(photoFile);
+            //Uri outPutFileUri = Uri.fromFile(photoFile);
             if(photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outPutFileUri);
+                //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outPutFileUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
