@@ -1,4 +1,4 @@
-package com.example.motoapp.activities;
+package com.example.motoapp.services;
 
 import android.Manifest;
 import android.app.Service;

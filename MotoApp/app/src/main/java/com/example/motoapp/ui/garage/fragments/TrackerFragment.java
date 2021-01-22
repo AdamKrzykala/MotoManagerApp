@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.motoapp.R;
-import com.example.motoapp.activities.TrackerInBackground;
+import com.example.motoapp.activities.MapActivity;
+import com.example.motoapp.services.TrackerInBackground;
 import com.example.motoapp.adapters.DatabaseAdapter;
 import com.example.motoapp.adapters.RecyclerAdapter;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TrackerFragment extends Fragment implements RecyclerViewClickListner {
 
@@ -165,6 +165,8 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
                 }
             }
         });
+
+        startActivity(new Intent(getActivity(), MapActivity.class));
     }
 
     @Override
