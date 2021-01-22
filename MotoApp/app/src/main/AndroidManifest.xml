@@ -8,11 +8,12 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,16 @@
             android:value="@string/map_key"/>
 
         <activity android:name=".activities.MapActivity"></activity>
+
+        <provider
+            android:authorities="com.example.motoapp.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
         <activity
             android:name=".ui.garage.SingleMotoActivity"
             android:label="@string/title_activity_single_moto"
@@ -44,6 +55,7 @@
             android:theme="@style/Theme.MotoApp.NoActionBar" />
 
         <service android:name=".services.TrackerInBackground" />
+
     </application>
 
 </manifest>

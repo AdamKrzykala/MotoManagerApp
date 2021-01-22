@@ -1,14 +1,17 @@
 package com.example.motoapp.ui.garage.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -16,27 +19,36 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.motoapp.BuildConfig;
 import com.example.motoapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class CameraFragment extends Fragment {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 228;
+    private static final int REQUEST_PERMISSION_CAMERA_AND_WRITE_EXTERNAL = 4192;
     private ImageView imageViewHandler;
-    private Button nextButtonHandler;
-    private Button backButtonHandler;
+    private FloatingActionButton nextButtonHandler;
+    private FloatingActionButton backButtonHandler;
     private String currentPhotoPath;
+
+    Uri currentPictureUri = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,19 +59,22 @@ public class CameraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.dispatchTakePictureIntent();
         return inflater.inflate(R.layout.fragment_camera, container, false);
         //return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        dispatchTakePictureIntent();
+
         imageViewHandler = (ImageView)view.findViewById(R.id.imageView);
-        nextButtonHandler = (Button)view.findViewById(R.id.nextButton);
-        backButtonHandler = (Button)view.findViewById(R.id.backButton);
+        nextButtonHandler = (FloatingActionButton) view.findViewById(R.id.nextButton);
+        backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backButton);
 
         nextButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
@@ -75,43 +90,64 @@ public class CameraFragment extends Fragment {
         });
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (getContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //Uri outPutFileUri = Uri.fromFile(photoFile);
-            if(photoFile != null) {
-                //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outPutFileUri);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void dispatchTakePictureIntent() {
+        if(getContext().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+            && getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            invokeCamera();
+        } else {
+            //Request permission
+            String[] permissionRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permissionRequest, REQUEST_PERMISSION_CAMERA_AND_WRITE_EXTERNAL);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_PERMISSION_CAMERA_AND_WRITE_EXTERNAL:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakePictureIntent();
+                } else {
+                    Log.e("PERMISSIONS: ", "I don't have permissions for camera or for write external");
+                }
+        }
+    }
+
+    private void invokeCamera() {
+        Uri pictureUri =  FileProvider.getUriForFile(getContext(),
+                getActivity().getApplicationContext().getPackageName() + ".provider",
+                createImageFile());
+
+        currentPictureUri = pictureUri;
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+
+        intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+    
+    private File createImageFile() {
+        File picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //timestamp makes unique names
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timeStamp =  sdf.format(new Date());
+        File imageFile = new File(picturesDirectory, "picture" + timeStamp + ".jpg");
+        return imageFile;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageViewHandler.setImageBitmap(imageBitmap);
+            imageViewHandler.setImageURI(currentPictureUri);
         }
     }
-
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg",storageDir);
-
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
 
 }

@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+        }
 
     }
 
@@ -57,13 +62,19 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "ACCESS_FINE_LOCATION permission GRANTED",
+                    Toast.makeText(this, "ACCESS_FINE_LOCATION permission NOT GRANTED",
                             Toast.LENGTH_LONG).show();
                 }
 
             case 2:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "ACCESS_COARSE_LOCATION permission GRANTED",
+                    Toast.makeText(this, "WRITE_EXTERNAL_STORAGE permission NOT GRANTED",
+                            Toast.LENGTH_LONG).show();
+                }
+
+            case 3:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "READ_EXTERNAL_STORAGE permission NOT GRANTED",
                             Toast.LENGTH_LONG).show();
                 }
         }
