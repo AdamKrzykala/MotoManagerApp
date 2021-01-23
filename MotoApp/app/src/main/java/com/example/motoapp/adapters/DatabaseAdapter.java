@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.motoapp.MainActivity;
@@ -35,21 +38,36 @@ public class DatabaseAdapter {
         localdb.execSQL("create table if not exists garage ("
                 + " vehID integer PRIMARY KEY autoincrement, "
                 + " name text, "
+                + " producent text, "
+                + " model text, "
+                + " year text, "
                 + " inService integer);" );
         //localdb.execSQL("DROP table garage");
     }
 
     public static class GarageAnswer {
-        public List<String> names;
+
         public List<Integer> indexes;
+        public List<String> names;
+        public List<String> producents;
+        public List<String> models;
+        public List<String> years;
+
 
         /**
          * @param names
          * @param indexes
          */
-        public GarageAnswer(List<String> names, List<Integer> indexes) {
-            this.names = names;
+        public GarageAnswer(List<Integer> indexes,
+                            List<String> names,
+                            List<String> producents,
+                            List<String> models,
+                            List<String> years) {
             this.indexes = indexes;
+            this.names = names;
+            this.producents = producents;
+            this.models = models;
+            this.years = years;
         }
     }
 
@@ -61,19 +79,34 @@ public class DatabaseAdapter {
 
         Cursor cursor = localdb.rawQuery("select * from garage where inService = ?;", new String[] {inServiceString});
         cursor.moveToFirst();
-        List<String> returnListNames = new ArrayList<String>();
         List<Integer> returnListIndexes = new ArrayList<Integer>();
+        List<String> returnListNames = new ArrayList<String>();
+        List<String> returnListProducents = new ArrayList<String>();
+        List<String> returnListModels = new ArrayList<String>();
+        List<String> returnListYears = new ArrayList<String>();
+
 
         while (cursor.isAfterLast() == false)
         {
-            String nameTemp = (String)cursor.getString(cursor.getColumnIndex("name"));
-            returnListNames.add(nameTemp);
             int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("vehID"));
             returnListIndexes.add(indexTemp);
+            String nameTemp = (String)cursor.getString(cursor.getColumnIndex("name"));
+            returnListNames.add(nameTemp);
+            String producentTemp = (String)cursor.getString(cursor.getColumnIndex("producent"));
+            returnListProducents.add(producentTemp);
+            String modelTemp = (String)cursor.getString(cursor.getColumnIndex("model"));
+            returnListModels.add(modelTemp);
+            String yearTemp = (String)cursor.getString(cursor.getColumnIndex("year"));
+            returnListYears.add(yearTemp);
             cursor.moveToNext();
         }
         cursor.close();
-        return new GarageAnswer(returnListNames, returnListIndexes);
+        return new GarageAnswer(
+                returnListIndexes,
+                returnListNames,
+                returnListProducents,
+                returnListModels,
+                returnListYears);
     }
 
     public void moveToService(int idx)
@@ -86,9 +119,65 @@ public class DatabaseAdapter {
         localdb.execSQL("update garage set inService = 1 where vehID = ?;", new Object[] {Integer.toString(idx)});
     }
 
-    public void addVehicle(String name)
+    public void addVehicle(Bundle data)
     {
-        localdb.execSQL( "insert into garage(name, inService) values (?, ?);", new Object[] {name, 0} );
+        Log.i("ADD: ", "Iam in");
+        String name = data.getString("vresult");
+        String producent = data.getString("Producent");
+        String model = data.getString("Model");
+        String year = data.getString("Year");
+        String path = data.getString("Path");
+
+        localdb.execSQL(
+                "insert into garage(name, producent, model, year, inService) values (?, ?, ?, ?, ?);",
+                new Object[] {name, producent, model, year, 0} );
+
+        Toast.makeText(this.context, name + " added",
+                Toast.LENGTH_LONG).show();
+
+        //Creating folders
+
+        Cursor cursor = localdb.rawQuery("select MAX(vehID) as MAX_ITER from garage;", new String[] {});
+        cursor.moveToFirst();
+        int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("MAX_ITER"));
+
+        //Folder for pictures
+        File picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String newPathPic = picturesDirectory.getAbsolutePath() + "/moto" + String.valueOf(indexTemp);
+        File dirToCreatePic = new File(newPathPic);
+        Log.i("PATH: ", dirToCreatePic.getAbsolutePath());
+        if(dirToCreatePic.exists() && dirToCreatePic.isDirectory()) {
+            //erase
+            deleteFolder(dirToCreatePic);
+        }
+        dirToCreatePic.mkdir();
+
+        //Folder for PDF
+        File documentsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        String newPathDoc = documentsDirectory.getAbsolutePath() + "/moto" + String.valueOf(indexTemp);
+        File dirToCreateDoc = new File(newPathDoc);
+        Log.i("PATH: ", dirToCreateDoc.getAbsolutePath());
+        if(dirToCreateDoc.exists() && dirToCreateDoc.isDirectory()) {
+            //erase
+            deleteFolder(dirToCreateDoc);
+        }
+        dirToCreateDoc.mkdir();
+
+        //Copying PDF file to directory
+    }
+
+    public static void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) { //some JVMs return null for empty dirs
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    deleteFolder(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
     }
 
     public void deleteVehicle(int idx)
