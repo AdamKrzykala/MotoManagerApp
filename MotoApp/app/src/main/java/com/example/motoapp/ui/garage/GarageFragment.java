@@ -14,8 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.R;
+import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.adapters.DatabaseAdapter;
 import com.example.motoapp.adapters.RecyclerAdapter;
 import com.example.motoapp.adapters.RecyclerViewClickListner;

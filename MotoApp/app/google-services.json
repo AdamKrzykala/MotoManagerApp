@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "609027664741",
+    "firebase_url": "https://motoapp-a6501-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "motoapp-a6501",
+    "storage_bucket": "motoapp-a6501.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609027664741:android:706e1a1e03d83b07f04f8c",
+        "android_client_info": {
+          "package_name": "com.example.motoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609027664741-l3h8k5jkrqt27sc7vnl5j6he3ulhvuda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjEAZVlsb6aZxujezVr-YHbAa-kVyC99c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609027664741-l3h8k5jkrqt27sc7vnl5j6he3ulhvuda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
