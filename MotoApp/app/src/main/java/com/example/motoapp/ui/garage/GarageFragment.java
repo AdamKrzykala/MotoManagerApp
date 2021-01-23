@@ -61,7 +61,6 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
                         Toast.LENGTH_LONG).show();
                 //Add to local database
                 adapter.addVehicle(newModel);
-
             }
 
             if((requestCode == 102) && (resultCode == Activity.RESULT_OK))
