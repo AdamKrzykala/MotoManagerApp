@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.motoapp.BuildConfig;
 import com.example.motoapp.R;
+import com.example.motoapp.adapters.OnFragmentInteractionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -47,8 +48,20 @@ public class CameraFragment extends Fragment {
     private FloatingActionButton nextButtonHandler;
     private FloatingActionButton backButtonHandler;
     private String currentPhotoPath;
+    private OnFragmentInteractionListener listener;
 
     Uri currentPictureUri = null;
+
+    @Override
+    public void onAttach(Activity activity) {
+
+        super.onAttach(activity);
+        if(activity instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener)activity;
+        } else {
+
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +73,6 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_camera, container, false);
-        //return null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -136,10 +148,11 @@ public class CameraFragment extends Fragment {
     private File createImageFile() {
         File picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         //timestamp makes unique names
+        String localPath = "/moto" + listener.getString("index");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String timeStamp =  sdf.format(new Date());
-        File imageFile = new File(picturesDirectory, "picture" + timeStamp + ".jpg");
+        File imageFile = new File(picturesDirectory + localPath, "picture" + timeStamp + ".jpg");
         return imageFile;
     }
 

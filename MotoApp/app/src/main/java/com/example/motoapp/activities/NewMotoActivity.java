@@ -1,13 +1,27 @@
 package com.example.motoapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.ContentObservable;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,12 +33,22 @@ import com.example.motoapp.R;
 import com.example.motoapp.adapters.RecyclerAdapter;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +56,7 @@ import java.util.Map;
 
 public class NewMotoActivity extends AppCompatActivity implements RecyclerViewClickListner {
 
+    private static final int REQUEST_PERMISSION_WRITE_EXTERNAL = 4192;
     private Button quitButton;
     private Button findButton;
     private RecyclerView recyclerView;
@@ -57,6 +82,13 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
     private FirebaseFirestore dbHandler;
 
     private List<Bundle> downloadedVehicles;
+
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+
+    private StorageReference fileToDownloadReference;
+    private String directoryToSave = Environment.DIRECTORY_DOWNLOADS;
+    private String url;
 
     public void addingTestValues() {
         String[] producents =
@@ -294,12 +326,16 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_moto);
         localIntent = getIntent();
         localBundle = localIntent.getExtras();
+        this.firebaseStorage = FirebaseStorage.getInstance();
+        this.storageReference = firebaseStorage.getReference();
+        this.fileToDownloadReference = this.storageReference.child("manual.pdf");
 
         results = new ArrayList<String>();
         this.dbHandler = FirebaseFirestore.getInstance();
@@ -384,10 +420,57 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            String[] permissionRequest = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permissionRequest, REQUEST_PERMISSION_WRITE_EXTERNAL);
+        }
+    }
+
+    public void downloadFile(String file) {
+        this.fileToDownloadReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                url = uri.toString();
+                downloadPdf(file);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void downloadPdf(String file) {
+        DownloadManager mgr = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri downloadUri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+               .setAllowedOverRoaming(false).setTitle("")
+               .setDescription("Sth")
+               .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file);
+
+        mgr.enqueue(request);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_PERMISSION_WRITE_EXTERNAL:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Log.e("PERMISSIONS: ", "I don't have permissions for camera or for write external");
+                }
+        }
     }
 
     @Override
     public void onItemClick(int position) {
+        downloadFile("2");
         localBundle = downloadedVehicles.get(position);
         localBundle.putString("vresult", results.get(position));
         localIntent.putExtras(localBundle);

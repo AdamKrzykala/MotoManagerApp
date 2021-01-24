@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/moto_navigation"
+    app:startDestination="@id/MenuFragmentService">
+
+    <fragment
+        android:id="@+id/MenuFragmentService"
+        android:name="com.example.motoapp.ui.service.fragments.MenuFragmentService"
+        android:label="@string/menu_fragment_label"
+        tools:layout="@layout/fragment_menu_service">
+        <action
+            android:id="@+id/action_MenuFragmentService_to_AddFragmentService"
+            app:destination="@id/AddFragmentService" />
+        <action
+            android:id="@+id/action_MenuFragmentService_to_AllServicesFragmentService"
+            app:destination="@id/AllServicesFragmentService" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddFragmentService"
+        android:name="com.example.motoapp.ui.service.fragments.AddFragmentService"
+        android:label="fragment_add_service"
+        tools:layout="@layout/fragment_add_service" >
+        <action
+            android:id="@+id/action_AddFragmentService_to_MenuFragmentService"
+            app:destination="@id/MenuFragmentService" />
+    </fragment>
+    <fragment
+        android:id="@+id/AllServicesFragmentService"
+        android:name="com.example.motoapp.ui.service.fragments.AllServicesFragmentService"
+        android:label="fragment_all_services_service"
+        tools:layout="@layout/fragment_all_services_service" >
+        <action
+            android:id="@+id/action_AllServicesFragmentService_to_MenuFragmentService"
+            app:destination="@id/MenuFragmentService" />
+    </fragment>
+</navigation>

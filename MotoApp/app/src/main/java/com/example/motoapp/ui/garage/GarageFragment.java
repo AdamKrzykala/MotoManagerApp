@@ -2,6 +2,7 @@ package com.example.motoapp.ui.garage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +49,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     }//onCreateView
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -81,12 +84,12 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         newMotoIntent = new Intent(getActivity(), NewMotoActivity.class);
-        singleMotoIntent = new Intent(getActivity(), SingleMotoActivity.class);
+        singleMotoIntent = new Intent(getActivity(), SingleMotoActivityGarage.class);
 
         localViehicles = adapter.getVehicles(false);
 
         //Recycler View Settings
-        recyclerView = (RecyclerView) view.findViewById(R.id.mapList);
+        recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
         localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));

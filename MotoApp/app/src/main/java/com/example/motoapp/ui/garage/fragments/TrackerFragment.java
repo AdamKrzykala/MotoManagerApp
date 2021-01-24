@@ -62,7 +62,7 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.mapList);
+        recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
         //Here pass list with available maps - tempData
         localAdapter = new RecyclerAdapter(localIntent, new ArrayList<String>(), this);
         recyclerView.setAdapter(localAdapter);

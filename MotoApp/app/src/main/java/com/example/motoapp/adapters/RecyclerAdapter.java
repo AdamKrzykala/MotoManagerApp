@@ -56,8 +56,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
 
         public LocalViewHolder(@NonNull View itemView) {
             super(itemView);
-            stringNameVar = itemView.findViewById(R.id.textViewName);
-            stringSubnameVar = itemView.findViewById(R.id.textViewSubname);
+            stringNameVar = itemView.findViewById(R.id.textViewNameExtended);
+            stringSubnameVar = itemView.findViewById(R.id.textViewSubnameExtended);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

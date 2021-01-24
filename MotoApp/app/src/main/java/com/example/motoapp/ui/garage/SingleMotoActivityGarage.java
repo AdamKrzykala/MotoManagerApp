@@ -1,6 +1,5 @@
 package com.example.motoapp.ui.garage;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,16 +8,10 @@ import com.example.motoapp.adapters.OnFragmentInteractionListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.motoapp.R;
 
-public class SingleMotoActivity extends AppCompatActivity implements  OnFragmentInteractionListener{
+public class SingleMotoActivityGarage extends AppCompatActivity implements  OnFragmentInteractionListener{
 
     private Intent localIntent;
     private Bundle localBundle;
@@ -30,7 +23,7 @@ public class SingleMotoActivity extends AppCompatActivity implements  OnFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_moto);
+        setContentView(R.layout.activity_single_moto_garage);
 
         localIntent = getIntent();
         localBundle = localIntent.getExtras();
@@ -54,8 +47,14 @@ public class SingleMotoActivity extends AppCompatActivity implements  OnFragment
     }
 
     @Override
+    public void addServiceToDatabase(String name, String description) {
+
+    }
+
+    @Override
     public String getString(String key) {
         if (key == "name") return motoName;
+        if (key == "index") return String.valueOf(motoIndex);
         return null;
     }
 

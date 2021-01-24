@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/MenuFragment"
-        android:name="com.example.motoapp.ui.garage.fragments.MenuFragment"
+        android:name="com.example.motoapp.ui.garage.fragments.MenuFragmentGarage"
         android:label="@string/menu_fragment_label"
-        tools:layout="@layout/fragment_menu">
+        tools:layout="@layout/fragment_menu_garage">
 
         <action
             android:id="@+id/action_MenuFragment_to_TrackerFragment"

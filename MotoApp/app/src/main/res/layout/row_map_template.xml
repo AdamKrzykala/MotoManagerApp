@@ -36,7 +36,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewName"
+                    android:id="@+id/textViewNameExtended"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -45,7 +45,7 @@
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/textViewSubname"
+                    android:id="@+id/textViewSubnameExtended"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"

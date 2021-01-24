@@ -12,8 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -22,23 +21,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MotoApp">
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_key"/>
 
-        <activity android:name=".activities.MapActivity"></activity>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
+
+        <activity android:name=".activities.MapActivity" />
 
         <provider
-            android:authorities="com.example.motoapp.provider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.motoapp.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
-            android:name=".ui.garage.SingleMotoActivity"
+            android:name=".ui.service.SingleMotoActivityService"
+            android:label="@string/title_activity_single_moto"
+            android:theme="@style/Theme.MotoApp.NoActionBar" />
+
+        <activity
+            android:name=".ui.garage.SingleMotoActivityGarage"
             android:label="@string/title_activity_single_moto"
             android:theme="@style/Theme.MotoApp.NoActionBar" />
         <activity android:name=".activities.NewMotoActivity" />
@@ -55,7 +65,6 @@
             android:theme="@style/Theme.MotoApp.NoActionBar" />
 
         <service android:name=".services.TrackerInBackground" />
-
     </application>
 
 </manifest>
