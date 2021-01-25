@@ -68,7 +68,7 @@ public class TriggerFragmentService extends Fragment implements RecyclerViewClic
         super.onViewCreated(view, savedInstanceState);
 
         localTriggers = adapter.getTriggers(Integer.valueOf(listener.getString("index")));
-        backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backBtn);
+        backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backBtnService);
         wrapAddingButtonHandler = (FloatingActionButton) view.findViewById(R.id.wrapAddingButton);
         addTriggerButtonHandler = (FloatingActionButton) view.findViewById(R.id.addTriggerButton);
         editTextToDoHandler = (EditText) view.findViewById(R.id.editTextToDo);

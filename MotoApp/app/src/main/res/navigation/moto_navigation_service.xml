@@ -12,13 +12,20 @@
         tools:layout="@layout/fragment_menu_service">
         <action
             android:id="@+id/action_MenuFragmentService_to_AddFragmentService"
-            app:destination="@id/AddFragmentService" />
+            app:destination="@id/AddFragmentService"
+            app:enterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_MenuFragmentService_to_AllServicesFragmentService"
-            app:destination="@id/AllServicesFragmentService" />
+            app:destination="@id/AllServicesFragmentService"
+            app:enterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_MenuFragmentService_to_TriggerFragmentService"
-            app:destination="@id/TriggerFragmentService" />
+            app:destination="@id/TriggerFragmentService"
+            app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_MenuFragmentService_to_PdfFragment"
+            app:destination="@id/PdfFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/AddFragmentService"
@@ -27,7 +34,8 @@
         tools:layout="@layout/fragment_add_service" >
         <action
             android:id="@+id/action_AddFragmentService_to_MenuFragmentService"
-            app:destination="@id/MenuFragmentService" />
+            app:destination="@id/MenuFragmentService"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/AllServicesFragmentService"
@@ -36,7 +44,8 @@
         tools:layout="@layout/fragment_all_services_service" >
         <action
             android:id="@+id/action_AllServicesFragmentService_to_MenuFragmentService"
-            app:destination="@id/MenuFragmentService" />
+            app:destination="@id/MenuFragmentService"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/TriggerFragmentService"
@@ -45,6 +54,16 @@
         tools:layout="@layout/fragment_trigger_service" >
         <action
             android:id="@+id/action_TriggerFragmentService_to_MenuFragmentService"
-            app:destination="@id/MenuFragmentService" />
+            app:destination="@id/MenuFragmentService"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/PdfFragment"
+        android:name="com.example.motoapp.ui.service.fragments.pdfFragment"
+        android:label="pdfFragment" >
+        <action
+            android:id="@+id/action_PdfFragment_to_MenuFragmentService"
+            app:destination="@id/MenuFragmentService"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

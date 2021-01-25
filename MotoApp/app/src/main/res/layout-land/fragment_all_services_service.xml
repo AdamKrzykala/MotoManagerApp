@@ -7,12 +7,61 @@
     android:layout_height="match_parent"
     tools:context=".ui.service.fragments.AllServicesFragmentService" >
 
+    <LinearLayout
+        android:id="@+id/emailLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allServicesList"
+        app:layout_goneMarginBottom="20sp">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:foregroundGravity="center_horizontal"
+            android:src="@drawable/ic_menu_send" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allServicesList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/emailLayout"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +84,7 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/backBtn"
+            android:id="@+id/backBtnService"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
@@ -49,7 +98,7 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/wrapAddingButton"
+            android:id="@+id/shareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"

@@ -24,7 +24,7 @@
         android:layout_margin="20sp"
         android:orientation="horizontal"
         android:weightSum="3"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/emailLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allServicesList">
@@ -35,7 +35,7 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/backBtn"
+            android:id="@+id/backBtnService"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
@@ -49,13 +49,64 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/wrapAddingButton"
+            android:id="@+id/shareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:layout_weight="1"
             android:clickable="true"
-            android:src="@android:drawable/ic_menu_share" />
+            android:src="@drawable/ic_menu_share" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/emailLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        app:layout_goneMarginBottom="20sp">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:foregroundGravity="center_vertical"
+            android:gravity="center_vertical|fill_vertical"
+            android:inputType="textPersonName"
+            android:text="adamkrzykala97@gmail.com" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:foregroundGravity="center_horizontal"
+            android:src="@drawable/ic_menu_send" />
 
         <Space
             android:layout_width="wrap_content"

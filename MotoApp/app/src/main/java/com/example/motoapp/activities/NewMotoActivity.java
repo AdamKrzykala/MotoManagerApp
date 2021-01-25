@@ -3,6 +3,7 @@ package com.example.motoapp.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.motoapp.R;
 import com.example.motoapp.adapters.RecyclerAdapterMoto;
@@ -323,7 +325,6 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
         localBundle = localIntent.getExtras();
         this.firebaseStorage = FirebaseStorage.getInstance();
         this.storageReference = firebaseStorage.getReference();
-        this.fileToDownloadReference = this.storageReference.child("manual.pdf");
 
         results = new ArrayList<String>();
         this.dbHandler = FirebaseFirestore.getInstance();
@@ -354,7 +355,7 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
 
         //Recycler View Settings
         recyclerView = (RecyclerView) findViewById(R.id.globalList);
-        localAdapter = new RecyclerAdapterMoto(this, results, null,this);
+        localAdapter = new RecyclerAdapterMoto(this, results, null, null,this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -408,9 +409,31 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissionRequest = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            requestPermissions(permissionRequest, REQUEST_PERMISSION_WRITE_EXTERNAL);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+            case 2:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "WRITE_EXTERNAL_STORAGE permission NOT GRANTED",
+                            Toast.LENGTH_LONG).show();
+                }
+
+            case 3:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "READ_EXTERNAL_STORAGE permission NOT GRANTED",
+                            Toast.LENGTH_LONG).show();
+                }
         }
     }
 
@@ -436,29 +459,22 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
 
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                .setAllowedOverRoaming(false).setTitle("")
-               .setDescription("Sth")
+               .setDescription("manual")
                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file);
 
         mgr.enqueue(request);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_PERMISSION_WRITE_EXTERNAL:
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.e("PERMISSIONS: ", "I don't have permissions for camera or for write external");
-                }
-        }
-    }
 
     @Override
     public void onItemClick(int position) {
-        downloadFile("2");
+        String name = downloadedVehicles.get(position).getString("Producent") + "_"
+                + downloadedVehicles.get(position).getString("Model") + "_"
+                + downloadedVehicles.get(position).getString("Year") + ".pdf";
+
+        String source = downloadedVehicles.get(position).getString("Path");
+        this.fileToDownloadReference = this.storageReference.child(source);
+        downloadFile(name.replaceAll("\\s", ""));
         localBundle = downloadedVehicles.get(position);
         localBundle.putString("vresult", results.get(position));
         localIntent.putExtras(localBundle);

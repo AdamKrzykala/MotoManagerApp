@@ -1,10 +1,16 @@
 package com.example.motoapp.ui.service.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,6 +38,9 @@ public class AllServicesFragmentService extends Fragment implements RecyclerView
 
     private FloatingActionButton backButtonHandler;
     private FloatingActionButton shareButtonHandler;
+    private FloatingActionButton sendButtonHandler;
+    private LinearLayout emailLayoutHandler;
+    private EditText emailTextHandler;
 
     private OnFragmentInteractionListener listener;
 
@@ -62,8 +71,13 @@ public class AllServicesFragmentService extends Fragment implements RecyclerView
         super.onViewCreated(view, savedInstanceState);
 
         localServices = adapter.getServices(Integer.valueOf(listener.getString("index")));
-        backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backBtn);
-        shareButtonHandler = (FloatingActionButton) view.findViewById(R.id.wrapAddingButton);
+        backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backBtnService);
+        shareButtonHandler = (FloatingActionButton) view.findViewById(R.id.shareButton);
+        emailLayoutHandler = (LinearLayout) view.findViewById(R.id.emailLayout);
+        sendButtonHandler = (FloatingActionButton) view.findViewById(R.id.sendButton);
+        emailTextHandler = (EditText) view.findViewById(R.id.emailText);
+        emailLayoutHandler.setVisibility(View.GONE);
+
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.allServicesList);
@@ -89,10 +103,48 @@ public class AllServicesFragmentService extends Fragment implements RecyclerView
         shareButtonHandler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                emailLayoutHandler.setVisibility(View.VISIBLE);
+            }
+        });
 
+        sendButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailLayoutHandler.setVisibility(View.GONE);
+                //Sending email
+                shareDataViaEmail();
             }
         });
     }//onViewCreated
+
+    protected void shareDataViaEmail() {
+        Log.i("Send email", "");
+
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailTextHandler.getText().toString()} );
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Moto Data");
+
+        String stringToSend = null;
+        for (Integer i = 0; i < localServices.indexes.size(); i++) {
+            stringToSend += String.valueOf(localServices.names.get(i)) + "\n";
+            stringToSend += "Data wykonania: " + localServices.dates.get(i) + "\n";
+            stringToSend += "Opis: " + localServices.descriptions.get(i) + "\n";
+            stringToSend += "\n";
+        }
+
+        emailIntent.putExtra(Intent.EXTRA_TEXT, stringToSend);
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            localIntent.finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onItemClick(int position) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,18 +97,8 @@ public class MenuFragmentService extends Fragment {
         manualButtonHandler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Opening PDF
-                File dir = new File("content://com.android.providers.downloads.documents/document");
-                String fileName = listener.getString("name");
-                File fileToOpen = new File(dir,"5");
-                String toOpen = "content://com.android.providers.downloads.documents/document/downloads/"
-                        + "2" + ".pdf";
-                Uri uriToOpen = Uri.parse(toOpen);
-                Log.i("URI: ", uriToOpen.toString());
-                Intent pdfIntent = new Intent(getActivity(), DocumentActivity.class);
-                pdfIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                pdfIntent.setData(uriToOpen);
-                startActivity(pdfIntent);
+                NavHostFragment.findNavController(MenuFragmentService.this)
+                        .navigate(R.id.action_MenuFragmentService_to_PdfFragment);
             }
         });
 

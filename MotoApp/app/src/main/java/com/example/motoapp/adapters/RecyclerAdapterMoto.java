@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,20 +19,23 @@ public class RecyclerAdapterMoto extends RecyclerView.Adapter<RecyclerAdapterMot
 
     List<String> data;
     List<Integer> mths;
+    List<Integer> triggers;
     Context context;
     RecyclerViewClickListner recyclerViewClickListner;
 
-    public RecyclerAdapterMoto(Context ct, List<String> tempData, List<Integer> mths, RecyclerViewClickListner recyclerViewClickListner) {
+    public RecyclerAdapterMoto(Context ct, List<String> tempData, List<Integer> mths, List<Integer> triggers, RecyclerViewClickListner recyclerViewClickListner) {
         this.context = ct;
         this.data = tempData;
         this.mths = mths;
+        this.triggers = triggers;
         this.recyclerViewClickListner = recyclerViewClickListner;
     }
 
-    public void updateAdapter(List<String> newList, List<Integer> newMths)
+    public void updateAdapter(List<String> newList, List<Integer> newMths, List<Integer>triggers)
     {
         this.mths = newMths;
         this.data = newList;
+        this.triggers = triggers;
         notifyDataSetChanged();
     }
 
@@ -49,6 +53,12 @@ public class RecyclerAdapterMoto extends RecyclerView.Adapter<RecyclerAdapterMot
         holder.stringNameVar.setText(data.get(position));
         if (this.mths != null) holder.stringSubnameVar.setText("mth: " + String.valueOf(mths.get(position)));
         else holder.stringSubnameVar.setText("Available");
+        if (this.triggers != null) {
+            if(triggers.get(position) == 1) holder.triggerView.setVisibility(View.VISIBLE);
+            else holder.triggerView.setVisibility(View.GONE);
+        }
+        else holder.triggerView.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -60,11 +70,13 @@ public class RecyclerAdapterMoto extends RecyclerView.Adapter<RecyclerAdapterMot
 
         TextView stringNameVar;
         TextView stringSubnameVar;
+        ImageView triggerView;
 
         public LocalViewHolder(@NonNull View itemView) {
             super(itemView);
             stringNameVar = itemView.findViewById(R.id.textViewName);
             stringSubnameVar = itemView.findViewById(R.id.textViewSubname);
+            triggerView = itemView.findViewById(R.id.triggerView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

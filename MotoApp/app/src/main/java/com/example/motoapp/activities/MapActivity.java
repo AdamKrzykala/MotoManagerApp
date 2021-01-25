@@ -33,6 +33,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     GoogleMap gMap;
     DatabaseAdapter adapter;
     String runTable;
+    Button backButtonHandler;
 
     public Polyline polyline = null;
     public List<LatLng> latLngList = new ArrayList<>();
@@ -49,6 +50,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         localBundle = localIntent.getExtras();
         runTable = localBundle.getString("source");
         adapter = new DatabaseAdapter(this);
+        backButtonHandler = (Button) findViewById(R.id.bt_back);
+
+        backButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         this.latLngList = adapter.getLocations(runTable);
 

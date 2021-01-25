@@ -82,7 +82,7 @@ public class MenuFragmentGarage extends Fragment {
             @Override
             public void onClick(View v) {
                 File sdDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                File file = new File(sdDir + "/moto2");
+                File file = new File(sdDir + "/moto" + String.valueOf(listener.getString("index")));
 
                 if (file.isDirectory()) {
                     Intent intent = new Intent();

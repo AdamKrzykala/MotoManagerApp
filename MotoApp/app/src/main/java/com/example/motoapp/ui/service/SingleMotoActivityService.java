@@ -49,6 +49,9 @@ public class SingleMotoActivityService extends AppCompatActivity implements  OnF
     public String getString(String key) {
         if (key == "name") return motoName;
         if (key == "index") return String.valueOf(motoIndex);
+        if (key == "producent") return localBundle.getString("producent");
+        if (key == "model") return localBundle.getString("model");
+        if (key == "year") return String.valueOf(localBundle.getInt("year"));
         return null;
     }
 

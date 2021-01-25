@@ -29,6 +29,7 @@ import java.io.File;
 public class AddFragmentService extends Fragment {
 
     private FloatingActionButton addBtnHandler;
+    private FloatingActionButton menubackbtnHandler;
     private EditText name;
     private EditText description;
     private OnFragmentInteractionListener listener;
@@ -58,8 +59,17 @@ public class AddFragmentService extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         addBtnHandler = (FloatingActionButton)view.findViewById(R.id.addBtn);
+        menubackbtnHandler = (FloatingActionButton)view.findViewById(R.id.menubackbtn);
         name = (EditText)view.findViewById(R.id.name);
         description = (EditText)view.findViewById(R.id.description);
+
+        menubackbtnHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AddFragmentService.this)
+                        .navigate(R.id.action_AddFragmentService_to_MenuFragmentService);
+            }
+        });
 
         addBtnHandler.setOnClickListener(new View.OnClickListener() {
             @Override

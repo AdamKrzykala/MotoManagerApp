@@ -174,7 +174,7 @@ public class DatabaseAdapter {
 
         while (cursor.isAfterLast() == false)
         {
-            Integer idxTemp = (Integer) cursor.getInt(cursor.getColumnIndex("runID"));
+            Integer idxTemp = (Integer) cursor.getInt(cursor.getColumnIndex("triggerID"));
             returnListIndexes.add(idxTemp);
             String whatTemp = (String) cursor.getString(cursor.getColumnIndex("whatToDo"));
             returnListWhatToDo.add(whatTemp);
@@ -260,6 +260,7 @@ public class DatabaseAdapter {
         public List<String> models;
         public List<String> years;
         public List<Integer> mths;
+        public List<Integer> activeTriggers;
 
 
         /**
@@ -271,7 +272,8 @@ public class DatabaseAdapter {
                             List<String> producents,
                             List<String> models,
                             List<String> years,
-                            List<Integer> mths) {
+                            List<Integer> mths,
+                            List<Integer> activeTriggers) {
 
             this.mths = mths;
             this.indexes = indexes;
@@ -279,6 +281,7 @@ public class DatabaseAdapter {
             this.producents = producents;
             this.models = models;
             this.years = years;
+            this.activeTriggers = activeTriggers;
         }
     }
     
@@ -345,6 +348,7 @@ public class DatabaseAdapter {
         List<String> returnListProducents = new ArrayList<String>();
         List<String> returnListModels = new ArrayList<String>();
         List<String> returnListYears = new ArrayList<String>();
+        List<Integer> returnActiveTriggers = new ArrayList<>();
 
 
         while (cursor.isAfterLast() == false)
@@ -362,6 +366,13 @@ public class DatabaseAdapter {
             String yearTemp = (String)cursor.getString(cursor.getColumnIndex("year"));
             returnListYears.add(yearTemp);
             cursor.moveToNext();
+            int trigger = 0;
+            TriggersAnswer tempTriggers = getTriggers(indexTemp);
+            for (int i = 0; i < tempTriggers.indexes.size(); i++) {
+                if (tempTriggers.mth.get(i) <= mthTemp) trigger = 1;
+                break;
+            }
+            returnActiveTriggers.add(trigger);
         }
         cursor.close();
         return new GarageAnswer(
@@ -370,7 +381,8 @@ public class DatabaseAdapter {
                 returnListProducents,
                 returnListModels,
                 returnListYears,
-                returnListMths);
+                returnListMths,
+                returnActiveTriggers);
     }
 
     public void moveToService(int idx)

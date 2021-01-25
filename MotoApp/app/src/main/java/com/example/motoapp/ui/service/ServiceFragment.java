@@ -67,7 +67,7 @@ public class ServiceFragment extends Fragment implements RecyclerViewClickListne
             }
 
             localViehicles = adapter.getVehicles(true);
-            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths);
+            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths, localViehicles.activeTriggers);
             localAdapter.notifyDataSetChanged();
         }
         catch(Exception e)
@@ -85,7 +85,7 @@ public class ServiceFragment extends Fragment implements RecyclerViewClickListne
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
-        localAdapter = new RecyclerAdapterMoto(localIntent, localViehicles.names, localViehicles.mths, this);
+        localAdapter = new RecyclerAdapterMoto(localIntent, localViehicles.names, localViehicles.mths, localViehicles.activeTriggers, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
 

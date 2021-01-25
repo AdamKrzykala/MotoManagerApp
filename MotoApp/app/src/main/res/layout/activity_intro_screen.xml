@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="326dp"
-        android:layout_height="446dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="20sp"
         android:src="@drawable/slideshow"
         app:layout_constraintBottom_toTopOf="@+id/apptitle"
         app:layout_constraintEnd_toEndOf="parent"

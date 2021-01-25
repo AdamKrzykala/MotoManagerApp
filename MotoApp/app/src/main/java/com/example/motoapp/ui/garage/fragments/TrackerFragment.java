@@ -1,8 +1,10 @@
 package com.example.motoapp.ui.garage.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -69,6 +73,16 @@ public class TrackerFragment extends Fragment
         }
     }
 
+    public void createTest() {
+        adapter = new DatabaseAdapter(localIntent);
+        adapter.addNewRun(Integer.valueOf("1"));
+        String currentTable = adapter.getCurrentTable();
+        adapter.addPointToCurrentRun(currentTable, 30.045, 50.345);
+        adapter.addPointToCurrentRun(currentTable, 30.044, 52.346);
+        adapter.addPointToCurrentRun(currentTable, 32.043, 50.348);
+        adapter.addPointToCurrentRun(currentTable, 32.043, 51.349);
+    }
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -85,11 +99,37 @@ public class TrackerFragment extends Fragment
         return inflater.inflate(R.layout.fragment_tracker, container, false);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "ACCESS_FINE_LOCATION permission NOT GRANTED",
+                            Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.globalList);
-
+        //createTest();
         localMaps = adapter.getRuns(index);
 
         //Here pass list with available maps - tempData
@@ -105,10 +145,17 @@ public class TrackerFragment extends Fragment
         updateButtonHandler = (Button)view.findViewById(R.id.updateButton);
 
         updateButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("WrongConstant")
             @Override
             public void onClick(View v) {
                 String textTemp = newMth.getText().toString();
-                if(textTemp != null) adapter.updateMth(index, Integer.valueOf(textTemp));
+                if(textTemp != null && isNumeric(textTemp)) {
+                    adapter.updateMth(index, Integer.valueOf(textTemp));
+                    Toast.makeText(getActivity(), "Mth changed", 3000).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Wrong input", 3000).show();
+                }
                 newMth.setText("");
             }
         });
@@ -210,7 +257,10 @@ public class TrackerFragment extends Fragment
                 }
             }
         });
-
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
         //startActivity(new Intent(getActivity(), MapActivity.class));
     }
 

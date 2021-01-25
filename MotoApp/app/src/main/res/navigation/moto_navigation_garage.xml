@@ -13,12 +13,12 @@
 
         <action
             android:id="@+id/action_MenuFragment_to_TrackerFragment"
-            app:destination="@id/TrackerFragment" />
+            app:destination="@id/TrackerFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_MenuFragment_to_CameraFragment"
             app:destination="@id/CameraFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit" />
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/TrackerFragment"
@@ -28,7 +28,8 @@
 
         <action
             android:id="@+id/action_TrackerFragment_to_MenuFragment"
-            app:destination="@id/MenuFragment" />
+            app:destination="@id/MenuFragment"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/CameraFragment"
@@ -38,7 +39,6 @@
         <action
             android:id="@+id/action_CameraFragment_to_MenuFragment"
             app:destination="@id/MenuFragment"
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_close_exit" />
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

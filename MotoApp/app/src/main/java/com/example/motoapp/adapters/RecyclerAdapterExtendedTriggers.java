@@ -66,7 +66,7 @@ public class RecyclerAdapterExtendedTriggers extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(@NonNull LocalViewHolderExtendedTrigger holder, int position) {
         holder.stringNameVarExtended.setText(whatToDos.get(position));
-        holder.stringSubnameVarExtended.setText(mths.get(position));
+        holder.stringSubnameVarExtended.setText("mth: " + String.valueOf(mths.get(position)));
 
         holder.buttonDeleteHandler.setVisibility(View.GONE);
 
@@ -108,6 +108,7 @@ public class RecyclerAdapterExtendedTriggers extends RecyclerView.Adapter<Recycl
 
             stringNameVarExtended = itemViewExtended.findViewById(R.id.textViewNameExtendedTrigger);
             stringSubnameVarExtended = itemViewExtended.findViewById(R.id.textViewSubnameExtendedTrigger);
+
             buttonDeleteHandler = itemViewExtended.findViewById(R.id.buttonTrigger);
 
             buttonDeleteHandler.setOnClickListener(new View.OnClickListener() {

@@ -70,7 +70,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
             }
 
             localViehicles = adapter.getVehicles(false);
-            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths);
+            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths, localViehicles.activeTriggers);
             localAdapter.notifyDataSetChanged();
         }
         catch(Exception e)
@@ -92,6 +92,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
         localAdapter = new RecyclerAdapterMoto(localIntent,
                 localViehicles.names,
                 localViehicles.mths,
+                localViehicles.activeTriggers,
                 this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
