@@ -28,7 +28,7 @@ public class MenuFragmentService extends Fragment {
 
     private static final int REQUEST_PERMISSION_READ_EXTERNAL = 4193;
     private ImageButton addButtonHandler;
-    private ImageButton cameraButtonHandler;
+    private ImageButton triggerButtonHandler;
     private ImageButton manualButtonHandler;
     private ImageButton registerButtonHandler;
     private ImageButton garagebuttonHandler;
@@ -61,7 +61,7 @@ public class MenuFragmentService extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(listener.getString("name") + " - service");
 
         addButtonHandler = (ImageButton)view.findViewById(R.id.addButton);
-        cameraButtonHandler = (ImageButton)view.findViewById(R.id.triggerButton);
+        triggerButtonHandler = (ImageButton)view.findViewById(R.id.triggerButton);
         manualButtonHandler = (ImageButton)view.findViewById(R.id.manualButton);
         registerButtonHandler = (ImageButton)view.findViewById(R.id.registerButton);
         garagebuttonHandler = (ImageButton)view.findViewById(R.id.garageButton);
@@ -75,10 +75,11 @@ public class MenuFragmentService extends Fragment {
             }
         });
 
-        cameraButtonHandler.setOnClickListener(new View.OnClickListener() {
+        triggerButtonHandler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                NavHostFragment.findNavController(MenuFragmentService.this)
+                        .navigate(R.id.action_MenuFragmentService_to_TriggerFragmentService);
             }
         });
 

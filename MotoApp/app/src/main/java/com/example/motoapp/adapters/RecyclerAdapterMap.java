@@ -1,5 +1,6 @@
 package com.example.motoapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,14 @@ import com.example.motoapp.R;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalViewHolder> {
+public class RecyclerAdapterMap extends RecyclerView.Adapter<RecyclerAdapterMap.LocalViewHolderMap> {
 
     List<String> data;
+    List<Integer> mths;
     Context context;
     RecyclerViewClickListner recyclerViewClickListner;
 
-    public RecyclerAdapter(Context ct, List<String> tempData, RecyclerViewClickListner recyclerViewClickListner) {
+    public RecyclerAdapterMap(Context ct, List<String> tempData, RecyclerViewClickListner recyclerViewClickListner) {
         this.context = ct;
         this.data = tempData;
         this.recyclerViewClickListner = recyclerViewClickListner;
@@ -33,14 +35,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
 
     @NonNull
     @Override
-    public LocalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LocalViewHolderMap onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_moto_template, parent, false);
-        return new LocalViewHolder(view);
+        View view = inflater.inflate(R.layout.row_map_template, parent, false);
+        return new LocalViewHolderMap(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull LocalViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LocalViewHolderMap holder, int position) {
         holder.stringNameVar.setText(data.get(position));
     }
 
@@ -49,15 +52,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.LocalV
         return data.size();
     }
 
-    public class LocalViewHolder extends RecyclerView.ViewHolder{
+    public class LocalViewHolderMap extends RecyclerView.ViewHolder{
 
         TextView stringNameVar;
-        TextView stringSubnameVar;
 
-        public LocalViewHolder(@NonNull View itemView) {
+        public LocalViewHolderMap(@NonNull View itemView) {
             super(itemView);
-            stringNameVar = itemView.findViewById(R.id.textViewNameExtended);
-            stringSubnameVar = itemView.findViewById(R.id.textViewSubnameExtended);
+            stringNameVar = itemView.findViewById(R.id.textViewTitle);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

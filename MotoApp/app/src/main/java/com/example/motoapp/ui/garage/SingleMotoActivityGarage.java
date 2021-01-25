@@ -15,8 +15,8 @@ public class SingleMotoActivityGarage extends AppCompatActivity implements  OnFr
 
     private Intent localIntent;
     private Bundle localBundle;
-    private Integer motoIndex;
-    private String motoName;
+    public Integer motoIndex;
+    public String motoName;
 
     private DatabaseAdapter adapter;
 

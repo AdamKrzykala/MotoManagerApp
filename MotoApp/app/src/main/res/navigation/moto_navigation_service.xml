@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_MenuFragmentService_to_AllServicesFragmentService"
             app:destination="@id/AllServicesFragmentService" />
+        <action
+            android:id="@+id/action_MenuFragmentService_to_TriggerFragmentService"
+            app:destination="@id/TriggerFragmentService" />
     </fragment>
     <fragment
         android:id="@+id/AddFragmentService"
@@ -33,6 +36,15 @@
         tools:layout="@layout/fragment_all_services_service" >
         <action
             android:id="@+id/action_AllServicesFragmentService_to_MenuFragmentService"
+            app:destination="@id/MenuFragmentService" />
+    </fragment>
+    <fragment
+        android:id="@+id/TriggerFragmentService"
+        android:name="com.example.motoapp.ui.service.fragments.TriggerFragmentService"
+        android:label="fragment_trigger_service"
+        tools:layout="@layout/fragment_trigger_service" >
+        <action
+            android:id="@+id/action_TriggerFragmentService_to_MenuFragmentService"
             app:destination="@id/MenuFragmentService" />
     </fragment>
 </navigation>

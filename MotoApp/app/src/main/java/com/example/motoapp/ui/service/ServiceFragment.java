@@ -17,19 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.motoapp.R;
-import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.adapters.DatabaseAdapter;
-import com.example.motoapp.adapters.RecyclerAdapter;
+import com.example.motoapp.adapters.RecyclerAdapterMoto;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
-import com.example.motoapp.ui.garage.SingleMotoActivityGarage;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ServiceFragment extends Fragment implements RecyclerViewClickListner {
 
     private Intent singleMotoIntent;
     private FragmentActivity localIntent;
 
-    private RecyclerAdapter localAdapter;
+    private RecyclerAdapterMoto localAdapter;
     private DatabaseAdapter.GarageAnswer localViehicles;
     private RecyclerView recyclerView;
 
@@ -70,7 +67,7 @@ public class ServiceFragment extends Fragment implements RecyclerViewClickListne
             }
 
             localViehicles = adapter.getVehicles(true);
-            localAdapter.updateAdapter(localViehicles.names);
+            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths);
             localAdapter.notifyDataSetChanged();
         }
         catch(Exception e)
@@ -88,7 +85,7 @@ public class ServiceFragment extends Fragment implements RecyclerViewClickListne
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
-        localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
+        localAdapter = new RecyclerAdapterMoto(localIntent, localViehicles.names, localViehicles.mths, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
 

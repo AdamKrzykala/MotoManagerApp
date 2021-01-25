@@ -15,7 +15,7 @@ import com.example.motoapp.R;
 
 import java.util.List;
 
-public class RecyclerAdapterExtended extends RecyclerView.Adapter<RecyclerAdapterExtended.LocalViewHolderExtended> {
+public class RecyclerAdapterExtendedServices extends RecyclerView.Adapter<RecyclerAdapterExtendedServices.LocalViewHolderExtendedService> {
 
     List<Integer> dataIndexes;
     List<String> dataNames;
@@ -26,7 +26,7 @@ public class RecyclerAdapterExtended extends RecyclerView.Adapter<RecyclerAdapte
     DatabaseAdapter adapter;
     int idx;
 
-    public RecyclerAdapterExtended(
+    public RecyclerAdapterExtendedServices(
             Context ct,
             int vehicle,
             List<Integer> dataIndexes,
@@ -56,15 +56,15 @@ public class RecyclerAdapterExtended extends RecyclerView.Adapter<RecyclerAdapte
 
     @NonNull
     @Override
-    public LocalViewHolderExtended onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LocalViewHolderExtendedService onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View viewExtended = inflater.inflate(R.layout.row_service_template_extended, parent, false);
-        return new LocalViewHolderExtended(viewExtended);
+        View viewExtended = inflater.inflate(R.layout.row_service_template_extended_services, parent, false);
+        return new LocalViewHolderExtendedService(viewExtended);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull LocalViewHolderExtended holder, int position) {
+    public void onBindViewHolder(@NonNull LocalViewHolderExtendedService holder, int position) {
         holder.stringNameVarExtended.setText(dataNames.get(position));
         holder.stringSubnameVarExtended.setText(dataSubnames.get(position));
         holder.stringDescriptionExtended.setText(descriptions.get(position));
@@ -98,7 +98,7 @@ public class RecyclerAdapterExtended extends RecyclerView.Adapter<RecyclerAdapte
         return dataNames.size();
     }
 
-    public class LocalViewHolderExtended extends RecyclerView.ViewHolder{
+    public class LocalViewHolderExtendedService extends RecyclerView.ViewHolder{
 
         public View expandedView;
         TextView stringNameVarExtended;
@@ -106,7 +106,7 @@ public class RecyclerAdapterExtended extends RecyclerView.Adapter<RecyclerAdapte
         TextView stringDescriptionExtended;
         Button buttonDeleteHandler;
 
-        public LocalViewHolderExtended(@NonNull View itemViewExtended) {
+        public LocalViewHolderExtendedService(@NonNull View itemViewExtended) {
             super(itemViewExtended);
             this.expandedView = itemViewExtended;
 

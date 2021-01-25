@@ -1,16 +1,12 @@
 package com.example.motoapp.ui.service.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,11 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.motoapp.R;
-import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.adapters.DatabaseAdapter;
 import com.example.motoapp.adapters.OnFragmentInteractionListener;
-import com.example.motoapp.adapters.RecyclerAdapter;
-import com.example.motoapp.adapters.RecyclerAdapterExtended;
+import com.example.motoapp.adapters.RecyclerAdapterExtendedServices;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,7 +24,7 @@ public class AllServicesFragmentService extends Fragment implements RecyclerView
 
     private FragmentActivity localIntent;
 
-    private RecyclerAdapterExtended localAdapter;
+    private RecyclerAdapterExtendedServices localAdapter;
     private DatabaseAdapter.ServicesAnswer localServices;
     private RecyclerView recyclerView;
 
@@ -69,11 +63,11 @@ public class AllServicesFragmentService extends Fragment implements RecyclerView
 
         localServices = adapter.getServices(Integer.valueOf(listener.getString("index")));
         backButtonHandler = (FloatingActionButton) view.findViewById(R.id.backBtn);
-        shareButtonHandler = (FloatingActionButton) view.findViewById(R.id.shareBtn);
+        shareButtonHandler = (FloatingActionButton) view.findViewById(R.id.wrapAddingButton);
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.allServicesList);
-        localAdapter = new RecyclerAdapterExtended(
+        localAdapter = new RecyclerAdapterExtendedServices(
                 localIntent,
                 Integer.valueOf(listener.getString("index")),
                 localServices.indexes,

@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import com.example.motoapp.MainActivity;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.LatLng;
 
 import java.io.File;
 import java.sql.ResultSet;
@@ -58,6 +59,7 @@ public class DatabaseAdapter {
                 + " producent text, "
                 + " model text, "
                 + " year text, "
+                + " mth integer, "
                 + " inService integer);" );
 
         localdb.execSQL("create table if not exists services ("
@@ -66,7 +68,62 @@ public class DatabaseAdapter {
                 + " description text, "
                 + " date_time text, "
                 + " vehID integer);" );
+
+        localdb.execSQL("create table if not exists runs ("
+                + " runID integer PRIMARY KEY autoincrement, "
+                + " vehID integer, "
+                + " allocation text, "
+                + " date_time text);" );
+
+        localdb.execSQL("create table if not exists triggers ("
+                + " triggerID integer PRIMARY KEY autoincrement, "
+                + " vehID integer, "
+                + " whatToDo text, "
+                + " mth integer, "
+                + " done integer);" );
         //localdb.execSQL("DROP table garage");
+    }
+
+    public String getCurrentTable() {
+        Cursor cursor = localdb.rawQuery("select MAX(runID) as MAX_ITER from runs;", new String[] {});
+        cursor.moveToFirst();
+        int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("MAX_ITER"));
+        Cursor cursorForString = localdb.rawQuery("select * from runs where runID = ?;",
+                new String[] {String.valueOf(indexTemp)});
+        cursorForString.moveToFirst();
+        return (String)cursorForString.getString(cursorForString.getColumnIndex("allocation"));
+    }
+
+    public void addPointToCurrentRun(String table, double latitude, double longitude) {
+        String command = "insert into " + table +" (latitude, longitude) values (?, ?);";
+        localdb.execSQL(
+                command,
+                new Object[] {latitude, longitude} );
+    }
+
+    public void addNewRun(Integer vehID) {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        String formattedDate = df.format(c);
+        localdb.execSQL(
+                "insert into runs(vehID, allocation, date_time) values (?, ?, ?);",
+                new Object[] {vehID, null, formattedDate} );
+        Cursor cursor = localdb.rawQuery("select MAX(runID) as MAX_ITER from runs;", new String[] {});
+        cursor.moveToFirst();
+        int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("MAX_ITER"));
+        String newTableForRun = "run" + String.valueOf(indexTemp);
+        localdb.execSQL("update runs set allocation = ? where runID = ?;",
+                new Object[] {newTableForRun, indexTemp});
+        String createTableCommand = "create table if not exists " + newTableForRun + " ("
+                + " pointID integer PRIMARY KEY autoincrement, "
+                + " latitude real, "
+                + " longitude real);";
+        localdb.execSQL(createTableCommand);
+    }
+
+    public void updateMth(Integer vehID, Integer newMth)
+    {
+        localdb.execSQL("update garage set mth = ? where vehID = ?;", new Object[] {newMth, vehID});
     }
 
     public void addService(String name, String description, Integer vehID) {
@@ -78,6 +135,123 @@ public class DatabaseAdapter {
                 new Object[] {name, description, formattedDate, vehID} );
     }
 
+    public void addTrigger(int vehID, String whatToDo, int mth)
+    {
+        localdb.execSQL(
+                "insert into triggers(vehID, whatToDo, mth, done) values (?, ?, ?, ?);",
+                new Object[] {vehID, whatToDo, mth, 0} );
+    }
+
+    public void triggerCompleted(int idx)
+    {
+        localdb.execSQL("update triggers set done = 1 where triggerID = ?;", new Object[] {Integer.toString(idx)});
+    }
+
+    public static class TriggersAnswer {
+        public List<Integer> indexes;
+        public List<String> whatToDo;
+        public List<Integer> mth;
+        public List<Integer> done;
+
+        public TriggersAnswer(List<Integer> indexes, List<String> whatToDo, List<Integer> mth, List<Integer> done) {
+            this.indexes = indexes;
+            this.whatToDo = whatToDo;
+            this.mth = mth;
+            this.done = done;
+        }
+    }
+
+    public TriggersAnswer getTriggers(Integer vehID)
+    {
+        Cursor cursor = localdb.rawQuery("select * from triggers where vehID = ? and done = 0;",
+                new String[] {String.valueOf(vehID)});
+        cursor.moveToFirst();
+        List<Integer> returnListIndexes = new ArrayList<Integer>();
+        List<String> returnListWhatToDo = new ArrayList<String>();
+        List<Integer> returnListMth = new ArrayList<Integer>();
+        List<Integer> returnListDone = new ArrayList<Integer>();
+
+
+        while (cursor.isAfterLast() == false)
+        {
+            Integer idxTemp = (Integer) cursor.getInt(cursor.getColumnIndex("runID"));
+            returnListIndexes.add(idxTemp);
+            String whatTemp = (String) cursor.getString(cursor.getColumnIndex("whatToDo"));
+            returnListWhatToDo.add(whatTemp);
+            Integer mthTemp = (Integer) cursor.getInt(cursor.getColumnIndex("mth"));
+            returnListMth.add(mthTemp);
+            Integer doneTemp = (Integer) cursor.getInt(cursor.getColumnIndex("done"));
+            returnListDone.add(doneTemp);
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return new TriggersAnswer(
+                returnListIndexes,
+                returnListWhatToDo,
+                returnListMth,
+                returnListDone);
+    }
+
+    public List<com.google.android.gms.maps.model.LatLng> getLocations(String allocation)
+    {
+        String command = "select * from " + allocation + ";";
+        Cursor cursor = localdb.rawQuery(command, null);
+        cursor.moveToFirst();
+        List<com.google.android.gms.maps.model.LatLng> returnListLatLng = new ArrayList<>();
+
+        while (cursor.isAfterLast() == false)
+        {
+            Double latitude = (Double) cursor.getDouble(cursor.getColumnIndex("latitude"));
+            Double longitude = (Double) cursor.getDouble(cursor.getColumnIndex("longitude"));
+            com.google.android.gms.maps.model.LatLng tempLatLng = new com.google.android.gms.maps.model.LatLng(latitude, longitude);
+            returnListLatLng.add(tempLatLng);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return returnListLatLng;
+    }
+
+    public static class RunsAnswer {
+        public List<Integer> indexes;
+        public List<String> allocations;
+        public List<String> dates;
+
+        public RunsAnswer(List<Integer> indexes, List<String> allocations, List<String> dates) {
+            this.indexes = indexes;
+            this.allocations = allocations;
+            this.dates = dates;
+        }
+    }
+
+    public RunsAnswer getRuns(Integer vehID)
+    {
+        Cursor cursor = localdb.rawQuery("select * from runs where vehID = ?;",
+                new String[] {String.valueOf(vehID)});
+        cursor.moveToFirst();
+        List<Integer> returnListIndexes = new ArrayList<Integer>();
+        List<String> returnListAllocations = new ArrayList<String>();
+        List<String> returnListDates = new ArrayList<String>();
+
+
+        while (cursor.isAfterLast() == false)
+        {
+            Integer idxTemp = (Integer) cursor.getInt(cursor.getColumnIndex("runID"));
+            returnListIndexes.add(idxTemp);
+            String allocationTemp = (String) cursor.getString(cursor.getColumnIndex("allocation"));
+            returnListAllocations.add(allocationTemp);
+            String dateTemp = (String)cursor.getString(cursor.getColumnIndex("date_time"));
+            returnListDates.add(dateTemp);
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return new RunsAnswer(
+                returnListIndexes,
+                returnListAllocations,
+                returnListDates);
+    }
+
     public static class GarageAnswer {
 
         public List<Integer> indexes;
@@ -85,6 +259,7 @@ public class DatabaseAdapter {
         public List<String> producents;
         public List<String> models;
         public List<String> years;
+        public List<Integer> mths;
 
 
         /**
@@ -95,7 +270,10 @@ public class DatabaseAdapter {
                             List<String> names,
                             List<String> producents,
                             List<String> models,
-                            List<String> years) {
+                            List<String> years,
+                            List<Integer> mths) {
+
+            this.mths = mths;
             this.indexes = indexes;
             this.names = names;
             this.producents = producents;
@@ -162,6 +340,7 @@ public class DatabaseAdapter {
         Cursor cursor = localdb.rawQuery("select * from garage where inService = ?;", new String[] {inServiceString});
         cursor.moveToFirst();
         List<Integer> returnListIndexes = new ArrayList<Integer>();
+        List<Integer> returnListMths = new ArrayList<Integer>();
         List<String> returnListNames = new ArrayList<String>();
         List<String> returnListProducents = new ArrayList<String>();
         List<String> returnListModels = new ArrayList<String>();
@@ -172,6 +351,8 @@ public class DatabaseAdapter {
         {
             int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("vehID"));
             returnListIndexes.add(indexTemp);
+            int mthTemp = (Integer)cursor.getInt(cursor.getColumnIndex("mth"));
+            returnListMths.add(mthTemp);
             String nameTemp = (String)cursor.getString(cursor.getColumnIndex("name"));
             returnListNames.add(nameTemp);
             String producentTemp = (String)cursor.getString(cursor.getColumnIndex("producent"));
@@ -188,7 +369,8 @@ public class DatabaseAdapter {
                 returnListNames,
                 returnListProducents,
                 returnListModels,
-                returnListYears);
+                returnListYears,
+                returnListMths);
     }
 
     public void moveToService(int idx)
@@ -212,13 +394,13 @@ public class DatabaseAdapter {
         String path = data.getString("Path");
 
         localdb.execSQL(
-                "insert into garage(name, producent, model, year, inService) values (?, ?, ?, ?, ?);",
-                new Object[] {name, producent, model, year, 0} );
+                "insert into garage(name, producent, model, year, mth, inService) values (?, ?, ?, ?, ?, ?);",
+                new Object[] {name, producent, model, year, 0, 0} );
 
         Cursor cursor = localdb.rawQuery("select MAX(vehID) as MAX_ITER from garage;", new String[] {});
         cursor.moveToFirst();
         int indexTemp = (Integer)cursor.getInt(cursor.getColumnIndex("MAX_ITER"));
-
+        Log.i("MAX: ", String.valueOf(indexTemp));
         //Creating folders
         //Folder for pictures
         File picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);

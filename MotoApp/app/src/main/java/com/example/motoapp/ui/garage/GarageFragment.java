@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.motoapp.R;
 import com.example.motoapp.activities.NewMotoActivity;
 import com.example.motoapp.adapters.DatabaseAdapter;
-import com.example.motoapp.adapters.RecyclerAdapter;
+import com.example.motoapp.adapters.RecyclerAdapterMoto;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,7 +30,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
     private FragmentActivity localIntent;
     private FloatingActionButton fabHandler;
 
-    private RecyclerAdapter localAdapter;
+    private RecyclerAdapterMoto localAdapter;
     private DatabaseAdapter.GarageAnswer localViehicles;
     private RecyclerView recyclerView;
 
@@ -59,7 +59,6 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
             if((requestCode== 101 ) && (resultCode== Activity.RESULT_OK))
             {
                 Bundle resultBundle= data.getExtras();
-
                 //Add to local database
                 adapter.addVehicle(resultBundle);
             }
@@ -71,7 +70,7 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
             }
 
             localViehicles = adapter.getVehicles(false);
-            localAdapter.updateAdapter(localViehicles.names);
+            localAdapter.updateAdapter(localViehicles.names, localViehicles.mths);
             localAdapter.notifyDataSetChanged();
         }
         catch(Exception e)
@@ -90,7 +89,10 @@ public class GarageFragment extends Fragment implements RecyclerViewClickListner
 
         //Recycler View Settings
         recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
-        localAdapter = new RecyclerAdapter(localIntent, localViehicles.names, this);
+        localAdapter = new RecyclerAdapterMoto(localIntent,
+                localViehicles.names,
+                localViehicles.mths,
+                this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
 

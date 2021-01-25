@@ -1,7 +1,6 @@
 package com.example.motoapp.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,15 +12,10 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.ContentObservable;
-import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,7 +24,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.motoapp.R;
-import com.example.motoapp.adapters.RecyclerAdapter;
+import com.example.motoapp.adapters.RecyclerAdapterMoto;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,12 +37,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +64,7 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
     private String currentlySelectedYear = null;
 
     private List<String> results;
-    private RecyclerAdapter localAdapter;
+    private RecyclerAdapterMoto localAdapter;
     private boolean isSearchingAllowed = false;
 
     private FirebaseFirestore dbHandler;
@@ -366,7 +354,7 @@ public class NewMotoActivity extends AppCompatActivity implements RecyclerViewCl
 
         //Recycler View Settings
         recyclerView = (RecyclerView) findViewById(R.id.globalList);
-        localAdapter = new RecyclerAdapter(this, results,this);
+        localAdapter = new RecyclerAdapterMoto(this, results, null,this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

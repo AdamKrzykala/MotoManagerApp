@@ -36,7 +36,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewNameExtended"
+                    android:id="@+id/textViewName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -46,7 +46,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewSubnameExtended"
+                    android:id="@+id/textViewSubname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"

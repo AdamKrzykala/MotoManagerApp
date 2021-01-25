@@ -1,6 +1,7 @@
 package com.example.motoapp.ui.garage.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -19,19 +22,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.motoapp.R;
 import com.example.motoapp.activities.MapActivity;
+import com.example.motoapp.adapters.OnFragmentInteractionListener;
+import com.example.motoapp.adapters.RecyclerAdapterMap;
 import com.example.motoapp.services.TrackerInBackground;
 import com.example.motoapp.adapters.DatabaseAdapter;
-import com.example.motoapp.adapters.RecyclerAdapter;
+import com.example.motoapp.adapters.RecyclerAdapterMoto;
 import com.example.motoapp.adapters.RecyclerViewClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class TrackerFragment extends Fragment implements RecyclerViewClickListner {
+public class TrackerFragment extends Fragment
+        implements RecyclerViewClickListner, OnFragmentInteractionListener {
 
-    private RecyclerAdapter localAdapter;
+    private RecyclerAdapterMap localAdapter;
     private RecyclerView recyclerView;
     private DatabaseAdapter adapter;
+
+    private EditText newMth;
 
     private boolean isStarted;
     private boolean isPaused;
@@ -41,8 +49,25 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
     protected FloatingActionButton startpauseFABhandler;
     protected FloatingActionButton savepauseFABhandler;
 
+    private Button updateButtonHandler;
+    Integer index;
+
+    private DatabaseAdapter.RunsAnswer localMaps;
+
     private FragmentActivity localIntent;
     Intent backgroundIntent;
+    private OnFragmentInteractionListener listener;
+
+    @Override
+    public void onAttach(Activity activity) {
+
+        super.onAttach(activity);
+        if(activity instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener)activity;
+        } else {
+
+        }
+    }
 
     @Override
     public View onCreateView(
@@ -52,6 +77,7 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
         localIntent = getActivity();
         adapter = new DatabaseAdapter(localIntent);
 
+        this.index = Integer.valueOf(listener.getString("index"));
         this.isStarted = false;
         this.isPaused = false;
         this.isStopped = true;
@@ -62,16 +88,30 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.serviceList);
+        recyclerView = (RecyclerView) view.findViewById(R.id.globalList);
+
+        localMaps = adapter.getRuns(index);
+
         //Here pass list with available maps - tempData
-        localAdapter = new RecyclerAdapter(localIntent, new ArrayList<String>(), this);
+        localAdapter = new RecyclerAdapterMap(localIntent, localMaps.dates, this);
         recyclerView.setAdapter(localAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(localIntent));
+        newMth = (EditText) view.findViewById(R.id.editMTH);
 
         backFABhandler = (FloatingActionButton)view.findViewById(R.id.backToMenuButton);
         startpauseFABhandler = (FloatingActionButton)view.findViewById(R.id.startpauseButton);
         savepauseFABhandler = (FloatingActionButton)view.findViewById(R.id.stopsaveButton);
         savepauseFABhandler.setVisibility(View.INVISIBLE);
+        updateButtonHandler = (Button)view.findViewById(R.id.updateButton);
+
+        updateButtonHandler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textTemp = newMth.getText().toString();
+                if(textTemp != null) adapter.updateMth(index, Integer.valueOf(textTemp));
+                newMth.setText("");
+            }
+        });
 
         backFABhandler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +129,8 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
             @Override
             public void onClick(View view) {
                 if(isStopped) {
+                    //Add new run
+                    adapter.addNewRun(Integer.valueOf(listener.getString("index")));
                     //Should start new map
                     TrackerInBackground.shouldContinue = true;
                     TrackerInBackground.shouldFinish = false;
@@ -162,15 +204,48 @@ public class TrackerFragment extends Fragment implements RecyclerViewClickListne
                     else {
                         startpauseFABhandler.setImageDrawable(getResources().getDrawable(R.drawable.start_button));
                     }
+                    localMaps = adapter.getRuns(index);
+                    localAdapter.updateAdapter(localMaps.dates);
+                    localAdapter.notifyDataSetChanged();
                 }
             }
         });
 
-        startActivity(new Intent(getActivity(), MapActivity.class));
+        //startActivity(new Intent(getActivity(), MapActivity.class));
     }
 
     @Override
     public void onItemClick(int position) {
+        //Start position
+        Intent mIntent = new Intent(getActivity(), MapActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putString("source", localMaps.allocations.get(position));
+        mIntent.putExtras(mBundle);
+        startActivity(mIntent);
+    }
+
+    @Override
+    public void onFragmentInteraction(int requestCode) {
+
+    }
+
+    @Override
+    public void addServiceToDatabase(String name, String description) {
+
+    }
+
+    @Override
+    public String getString(String key) {
+        return null;
+    }
+
+    @Override
+    public void moveVehicleToService() {
+
+    }
+
+    @Override
+    public void moveVehicleToGarage() {
 
     }
 }
